@@ -1,0 +1,376 @@
+[
+{
+"page_number": "9",
+"controversy": "Framing of Austro-Hungarian policies regarding minorities using absolute and exclusionary terms.",
+"quotes": [
+"În Ungaria, definită ca stat-națiune ai cărei locuitori, conform doctrinei naționale alcătuiesc un singur popor, nici o minoritate nu este cooptată la guvernare iar sistemul școlar și administrativ nu lasă loc nici unei excepții culturale.",
+"Este situația cu care se confruntă sârbii, croații și slovacii aparținători de monarhie și românii din Transilvania, Banat și Bucovina."
+],
+"explanation": "The narrative employs absolute terminology ("nici o minoritate", "nu lasă loc nici unei excepții culturale") to characterize the Hungarian half of the Austro-Hungarian Empire. While Magyarization policies were historically severe, framing the administration as allowing 'no cultural exception whatsoever' serves to maximize the oppressor-victim dynamic. This heavily emphasizes the historical plight of Romanians to legitimize subsequent national unifications, rather than providing a nuanced analysis of imperial minority policies.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 4,
+"confidence": 0.9
+},
+{
+"page_number": "13",
+"controversy": "Eurocentric and Christian-centric definition of modern civilization.",
+"quotes": [
+"Civilizația europeană are la temelie valorile creștine aflate mereu într-un proces de transformare și de adaptare la realitățile vremii.",
+"Cultura secolului al XX-lea conține contribuții remarcabile care îndeamnă la o continuă perfecționare morală și spirituală."
+],
+"explanation": "The narrative strictly centers Christian values as the bedrock of European civilization and characterizes the 20th century as a march toward 'continuous moral and spiritual perfection'. This perspective marginalizes the contributions of secular, non-Christian, or minority groups to European identity, and creates an overly sanitized, teleological view of European history that downplays the profound moral failures (such as totalitarianism and the Holocaust) that also defined the century.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 4,
+"confidence": 0.85
+},
+{
+"page_number": "23",
+"controversy": "The textbook's sanitized characterization of European colonialism and imperialism.",
+"quotes": [
+"„Exportul de civilizație” sub forma difuziunii valorilor culturale și religioase și a tehnologiei europene dinspre Europa spre celelalte continente a influențat profund situația popoarelor din colonii."
+],
+"explanation": "The text uses the highly sanitized and Eurocentric euphemism 'export of civilization' to describe the colonial era. By emphasizing the 'diffusion of cultural and religious values and European technology,' it systematically underdevelops the exploitative, violent, and extractive realities of imperialism, centering the narrative around European technological benevolence while downplaying the trauma and exploitation experienced by colonized peoples.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "24",
+"controversy": "The teleological and completely idealized framing of Romania's 1918 territorial expansion.",
+"quotes": [
+"Înfăptuirea idealului național în anul 1918, premisă a unei Românii democratice",
+"Intrată în 1916 în „Marele Război” de partea Antantei în vederea desăvârșirii unității politico-naționale, țara cunoaște euforia succesului de început..."
+],
+"explanation": "The textbook presents the 1918 Great Union purely as the fulfillment of an idealized, pre-ordained 'national destiny' and the absolute foundation of a 'democratic Romania'. This celebratory approach mythologizes the state-building process, largely ignoring the severe interethnic complexities, the political instability, and the substantial difficulties Romania faced in actually consolidating a democratic system during the interwar period.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 5,
+"confidence": 0.95
+},
+{
+"page_number": "28",
+"controversy": "Externalizing all blame for the installation of the communist regime in Romania.",
+"quotes": [
+"Cortina de fier lăsată asupra Europei după cel de-al doilea război mondial, în spatele căreia România a fost nevoită să stea vreme de aproape cinci decenii, a oprit evoluția țării pe coordonate democratice.",
+"Un proces evolutiv care se derulase firesc vreme îndelungată și cu rezultate vizibile în toate compartimentele vieții statului român a fost grav compromis de impunerea brutală a modelelor străine staliniste."
+],
+"explanation": "The text places the entirety of the blame for Romania's communist regime on external forces ('Iron Curtain', 'brutally imposed foreign Stalinist models'), portraying the nation exclusively as a passive victim ('forced to stay'). By doing so, the narrative strips away local agency, completely omitting the role of domestic communist factions, societal complicity, and internal socio-economic conditions that facilitated the regime's rise and decades-long maintenance.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Agency Attribution",
+"severity": 6,
+"confidence": 0.95
+},
+{
+"page_number": "35",
+"controversy": "The adoption of a highly subjective, first-person defensive tone regarding Romania's international image post-1989.",
+"quotes": [
+"Când presa străină generalizează și consideră România o țară coruptă și săracă, dar cu un grad ridicat de infracționalitate, suntem indignați și afirmăm răspicat că aceasta este o imagine deformată a țării noastre, pentru că în realitate lucrurile nu stau chiar atât de rău."
+],
+"explanation": "The authors abandon academic and historical neutrality, explicitly identifying with the national collective through first-person plural pronouns ('we are indignant', 'our country'). Instead of objectively analyzing why the international press focused on systemic post-communist issues (like institutionalized children and corruption), the textbook adopts an emotionally loaded, highly defensive stance aimed at shielding the nation's reputation and instructing students to feel nationalistic indignation.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 7,
+"confidence": 1.0
+},
+{
+"page_number": "1",
+"controversy": "Attribution of European Federalism",
+"quotes": [
+"Grigore Gafencu dezvăluie proiectul privind realizarea unei federații a statelor europene",
+"Gafencu [...] dovedește apartenența diplomatului român la salba numelor ilustre care au gândit crearea celei mai democratice și mai profunde solidarități a popoarelor continentului nostru, Uniunea Europeană."
+],
+"explanation": "The text positions Romanian diplomat Grigore Gafencu as a central architect of the European Union ('European Movement'). While Gafencu was involved in the Pan-European movement, attributing the conceptualization of the EU so strongly to him, alongside 'illustrious names' (implicitly Western founders like Monnet), is an example of elevating a national figure to a central role in a global narrative to foster national pride.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 4,
+"confidence": 0.9
+},
+{
+"page_number": "1",
+"controversy": "Teleological framing of National History",
+"quotes": [
+"Constituția noastră [...] a consfințit-o, în decursul anilor, istoria națională, a îngăduit celor doi mari regi ai trecutului nostru și sfetnicilor lor să îndeplinească minunea înălțării și a unirii neamului nostru."
+],
+"explanation": "The primary source (Gafencu) uses highly romanticized, teleological language ('miracle of elevation,' 'uniting the kin') to describe Romanian history. By including this in the 'Personality' sidebar without critical analysis, the textbook endorses a nationalist, romantic historiography that views the nation-state as a mystical destiny rather than a political construct.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 5,
+"confidence": 0.95
+},
+{
+"page_number": "3",
+"controversy": "Eurocentric Visual Hierarchy",
+"quotes": [
+"Gustave Klimt, Fată tânără (1912)",
+"Grafitti cu un Trabant trecând prin Zidul Berlinului"
+],
+"explanation": "The introductory visual collage for 'People, Society and the World of Ideas' in the 20th century exclusively features European imagery (Austrian art, German political events). This reinforces a Eurocentric worldview where the cultural and political history of the 20th century is synonymous with the history of Europe, omitting the Global South.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 3,
+"confidence": 0.85
+},
+{
+"page_number": "4",
+"controversy": "Universalization of Bourgeois Domesticity",
+"quotes": [
+"Context: Prima evoluție a secolului XX privește munca. Aceasta emigrează din sfera privată și se avântă în sfera publică."
+],
+"explanation": "The text presents the separation of workspace and domestic space as a universal 20th-century evolution. This generalizes the experience of the Western industrialized middle class to the whole world, ignoring that for large agrarian populations (including much of Romania for the first half of the century) and the working poor, this separation was not the defining experience.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Selection Bias",
+"severity": 3,
+"confidence": 0.8
+},
+{
+"page_number": "12",
+"controversy": "Ideological Framing of Communism vs. 'Modernity'",
+"quotes": [
+"Dezvoltarea inegală pune adesea laolaltă 'tradiționalul' și 'modernul'",
+"Valorile se transformă - pluralismul, libertatea, responsabilitatea, individualismul devin cuvinte-cheie ale societăților occidentale"
+],
+"explanation": "The text creates a dichotomy where 'modernity' is exclusively defined by Western liberal values (individualism, pluralism), while the Communist bloc and the 'Third World' are framed implicitly as deviations from this correct path. This is a teleological modernization narrative that equates 'Western' with 'Modern' and 'Good.'",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 4,
+"confidence": 0.9
+},
+{
+"page_number": "18",
+"controversy": "Teleological Dismissal of Socialism",
+"quotes": [
+"In realitate, contextul este mult mai complex, cu atât mai mult cu cât, la scara istoriei, socialismul se dovedește ceva necesar a fi depășit."
+],
+"explanation": "The textbook explicitly states that socialism is proven to be 'something necessary to be overcome.' This is not a neutral historical observation but an ideological judgment presented as factual inevitability (teleology), reflecting the post-1989 anti-communist consensus in Eastern Europe.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 6,
+"confidence": 0.95
+},
+{
+"page_number": "26",
+"controversy": "Negative Self-Stereotyping/Essentialism",
+"quotes": [
+"Pământul din bătătură / Ne-ai scos viile și pomii... Ca blestem pe-acest pământ",
+"Agricultura României, la începutul secolului XXI, este încă una de subzistență"
+],
+"explanation": "The selection of sources (Alina Mungiu Pippidi) and the narrative frame rural Romania through a lens of 'curse' and backwardness ('subsistence'). While economically accurate regarding subsistence, the framing uses essentialist tropes about Romanian rural fatalism ('the curse') rather than analyzing structural economic policy failures.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 4,
+"confidence": 0.85
+},
+{
+"page_number": "29",
+"controversy": "Sanitization of Interwar Intellectuals",
+"quotes": [
+"Diaspora românească are o îndelungată tradiție... intelectuali precum Mircea Eliade, Emil Cioran..."
+],
+"explanation": "The text lists Eliade and Cioran as cultural heroes of the diaspora who fled communism. It omits significant controversy regarding their pre-war fascist sympathies (Iron Guard affiliations). Presenting them solely as victims of communism/exiles creates a sanitized narrative of the Romanian intelligentsia.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "30",
+"controversy": "National Priority in Science (Insulin)",
+"quotes": [
+"Comitetul Nobel a recunoscut în 1969 meritele și prioritatea cercetătorului român în descoperirea insulinei.",
+"N.C. Paulescu descoperă ceea ce se va numi insulină"
+],
+"explanation": "The textbook asserts definitively that Paulescu discovered insulin and that the Nobel Committee 'recognized his priority' later. While Paulescu made significant contributions, the scientific consensus is nuanced, and the Nobel controversy is often utilized in Romanian historiography to construct a narrative of victimhood or unrecognized genius by the West.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 5,
+"confidence": 0.95
+},
+{
+"page_number": "34",
+"controversy": "Ideological Valorization of Liberal Democracy",
+"quotes": [
+"Neoliberalismul s-a alăturat tendințelor acestui model politic și democrației.",
+"Secolul nostru [...] demonstrează că victoria idealurilor de justiție și egalitate este întotdeauna efemeră, dar și faptul că, dacă reușim să ne păstrăm libertatea, putem relua totul de la capăt..."
+],
+"explanation": "The framing of liberal democracy and neoliberalism is celebratory rather than analytical. It presents the Western political model not just as one system among many, but as the 'victory of ideals of justice,' reinforcing a 'End of History' narrative common in post-Cold War textbooks.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 4,
+"confidence": 0.9
+},
+{
+"page_number": "71",
+"controversy": "Framing of British Political Parties",
+"quotes": [
+"Britanicii, țin la statul providențial pe care li l-au dat laburiștii, însă preferă să-l vadă administrat de conservatori"
+],
+"explanation": "The textbook uses a quote from an unnamed 'American journalist' (Doc. 2) to characterize the British political landscape. This selection generalizes the electorate's intent and subtly frames the Conservative party as the competent administrators of the state, while relegating Labour to merely the creators of the welfare state, introducing an ideological bias regarding governance competence.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "Selection Bias",
+"severity": 3,
+"confidence": 0.85
+},
+{
+"page_number": "72",
+"controversy": "US Agency in Japanese Democratization",
+"quotes": [
+"O vastă epurare a urmat în țară, care sub presiunea ocupantului american trebuia să întreprindă reforme profunde.",
+"Din 1946, Mac Arthur a impus Japoniei noile sale instituții."
+],
+"explanation": "The narrative attributes the democratization of Japan almost exclusively to external American pressure and General MacArthur ('Mac Arthur a impus'). While historically significant, this framing minimizes internal Japanese political dynamics or the agency of Japanese liberals, presenting the reforms as a unilateral imposition ('vastă epurare', 'impus').",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Agency Attribution",
+"severity": 4,
+"confidence": 0.9
+},
+{
+"page_number": "76",
+"controversy": "Eurocentric Framing of Decolonization (Algerian War)",
+"quotes": [
+"După 1945, Franța era afectată de război.",
+"criza a partidelor politice. Acestea au fost dezorientate în fața unui regim care nu le lăsa altă alternativă decât aprobarea politicii șefului statului sau opoziția."
+],
+"explanation": "The discussion of the transition to the Fifth Republic mentions the colonial context and the Algerian War (implied via the crisis), but focuses almost entirely on the political stability of the French state and the constitutional crisis. It omits the violence of the colonization and the decolonization war itself, centering the narrative on the French metropolis rather than the colonized peoples.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 4,
+"confidence": 0.8
+},
+{
+"page_number": "86",
+"controversy": "Understatement of the Great Leap Forward's Human Cost",
+"quotes": [
+"Eșecul „Marelui salt înainte” a deschis o perioadă de dificultăți economice și de tensiuni politice."
+],
+"explanation": "The textbook describes the Great Leap Forward merely as a failure leading to 'economic difficulties' and 'political tensions.' This is a significant underdevelopment, as it omits the massive famine and the death of tens of millions of people, which is the defining humanitarian characteristic of that event. The language sanitizes a demographic catastrophe.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 6,
+"confidence": 0.95
+},
+{
+"page_number": "88",
+"controversy": "Framing Fascism as a Reaction to Communism",
+"quotes": [
+"Fascismul a fost „umbra sau mai degrabă copilul monstruos al comunismului.” (W. Churchill)"
+],
+"explanation": "By selecting Winston Churchill's quote defining Fascism as the 'monstrous child of communism,' the textbook reinforces a specific historiographical theory (Nolte's thesis or similar reactionary theories) that frames Fascism primarily as a defensive reaction to the Left, potentially mitigating its independent ideological roots in nationalism and syndicalism.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "Primary Source Framing",
+"severity": 3,
+"confidence": 0.8
+},
+{
+"page_number": "92",
+"controversy": "Elitist Framing of the Peasant Question",
+"quotes": [
+"D-lor, nu m-am despărțit de direcțiunea partidului liberal pe vreo idee secundară...",
+"Barbu Delavrancea... își exprima ostilitatea împotriva liberalismului practicat de urmașii lui I.C. Brătianu."
+],
+"explanation": "The section on the 'Peasant Problem' and the 1907 revolt is presented entirely through the lens of parliamentary debates between elite politicians (Liberals vs. Conservatives). The agency, voice, or direct perspective of the peasantry—the majority of the population and the victims of the events—is omitted in favor of high-level political discourse.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "106",
+"controversy": "Explicit Moral Judgment of Appeasement",
+"quotes": [
+"Conciliatorismul interbelic este blamabil deoarece a pornit de la premise eronat înțelese."
+],
+"explanation": "The narrative text explicitly labels the policy of appeasement (conciliatorism) as 'blamabil' (blameworthy/reprehensible). This is a breach of neutral historiographical tone, imposing a retrospective moral judgment on historical actors rather than simply analyzing the causes and consequences of the policy failure.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 4,
+"confidence": 0.95
+},
+{
+"page_number": "1",
+"controversy": "Pejorative Description of Poland and Hungary (1938)",
+"quotes": [
+    "împărțirea Cehoslovaciei de către Germania (împreună cu Polonia și Ungaria, devenite un fel de state șacal)"
+],
+"explanation": "The textbook uses the highly charged and non-academic term 'jackal states' (state șacal) to describe Poland and Hungary's participation in the partition of Czechoslovakia. This constitutes strong emotive language and moral judgment rather than neutral historical description.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 5,
+"confidence": 0.95
+},
+{
+"page_number": "12",
+"controversy": "Uncritical Framing of NATO Interventions",
+"quotes": [
+    "NATO și-a propus să participe la gestionarea crizelor, să se angajeze în misiuni de menținere a păcii și impunerea păcii (peace-keeping, respectiv peace-making)."
+],
+"explanation": "The text frames NATO's post-Cold War expansion and military interventions exclusively through positive euphemisms like 'peace-making' and 'crisis management.' It omits critical geopolitical perspectives or controversies regarding the legality of interventions (e.g., Yugoslavia 1999) without UN mandates, attributing purely benevolent agency to the alliance.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Agency Attribution",
+"severity": 3,
+"confidence": 0.85
+},
+{
+"page_number": "14",
+"controversy": "Essentialist Generalization of Romanian National Character",
+"quotes": [
+    "românii au dovedit întotdeauna o extraordinară capacitate de a recepta modele. Au avut, e drept, și înclinarea de a le trata superficial și de a nu persevera în aplicarea lor."
+],
+"explanation": "The textbook utilizes a primary source from historian Lucian Boia that generalizes the Romanian national character as 'superficial' and lacking perseverance. This promotes a form of self-orientalism or cultural essentialism, presenting a subjective interpretation of national psychology as historical insight.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "National or Cultural Centering",
+"severity": 3,
+"confidence": 0.9
+},
+{
+"page_number": "19",
+"controversy": "Victimhood Narrative Regarding WWII Outcome",
+"quotes": [
+    "Tratată ca țară învinsă, România a trebuit să cedeze o parte a teritoriilor obținute în 1918"
+],
+"explanation": "The phrase 'Treated as a defeated country' implies that this treatment was unjust or unexpected. Given Romania's active participation as a major Axis ally for the majority of the war, this framing subtly reinforces a narrative of national victimhood.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 3,
+"confidence": 0.8
+},
+{
+"page_number": "26",
+"controversy": "Association of Islam Primarily with Radicalization",
+"quotes": [
+    "De la începutul secolului XX, islamismul a câștigat tot mai mult teren și s-a radicalizat.",
+    "Talibanii... regim politic asociat mai mereu cu atentatele teroriste"
+],
+"explanation": "The section on Islam focuses disproportionately on 'radicalization,' 'terrorism,' and political conflict compared to the sections on Christianity. This selection bias reinforces stereotypes by defining the religion's modern history primarily through the lens of violence and extremism.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Selection Bias",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "30",
+"controversy": "Exclusionary Definition of the National Church",
+"quotes": [
+    "Biserica Națională este Biserica unei națiuni care, prin continuitate istorică, reprezintă axa istorică a formării națiunii-stat."
+],
+"explanation": "The selected primary source (Radu Preda) explicitly links the Orthodox Church to the concept of the 'National Church' and the formation of the nation-state. This framing marginalizes other historical religious communities in Romania (Greek-Catholic, Protestant) from the core narrative of nation-building.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "National or Cultural Centering",
+"severity": 4,
+"confidence": 0.85
+},
+{
+"page_number": "30",
+"controversy": "Negative Framing of Multiculturalism",
+"quotes": [
+    "Dacă multiculturalismul devine un scop în sine, se poate ajunge la izolaționism, la intoleranță sau chiar la șovinism"
+],
+"explanation": "The narrative presents a warning that multiculturalism, if pursued as an end in itself, leads to 'chauvinism' (specifically of the minority against the majority). This reflects a specific political anxiety regarding minority rights rather than a neutral sociological description.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 4,
+"confidence": 0.8
+}
+]

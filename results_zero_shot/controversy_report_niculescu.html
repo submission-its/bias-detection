@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niculescu — Manual Audit</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6; color: #1a1a1a; background: #f8f9fa; padding: 40px 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: #2c3e50; font-size: 2em; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.5px; }
+        .subtitle { color: #666; margin-bottom: 30px; font-size: 0.95em; }
+        .summary {
+            background: white; padding: 20px; margin-bottom: 20px;
+            border-left: 4px solid #2c3e50; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .summary p { margin: 8px 0; color: #555; }
+        .summary strong { color: #2c3e50; }
+        .filter-bar {
+            background: white; padding: 16px 20px; margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+        }
+        .filter-bar label { font-weight: 600; color: #2c3e50; font-size: 0.9em; white-space: nowrap; }
+        .filter-btn {
+            padding: 5px 14px; border: 1px solid #d0d0d0; border-radius: 20px;
+            background: #f8f9fa; color: #444; font-size: 0.85em; cursor: pointer;
+            transition: all 0.15s; white-space: nowrap;
+        }
+        .filter-btn:hover { border-color: #2c3e50; color: #2c3e50; }
+        .filter-btn.active { background: #2c3e50; border-color: #2c3e50; color: white; }
+        .filter-count { margin-left: auto; font-size: 0.85em; color: #888; }
+        .finding { background: white; margin-bottom: 1px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .finding.hidden { display: none; }
+        .finding-header {
+            padding: 20px; cursor: pointer; display: flex;
+            justify-content: space-between; align-items: center;
+            user-select: none; transition: background-color 0.2s;
+        }
+        .finding-header:hover { background: #f8f9fa; }
+        .finding-title { color: #2c3e50; font-weight: 500; flex: 1; margin-right: 20px; }
+        .finding-meta { display: flex; gap: 15px; align-items: center; }
+        .finding-category { color: #666; font-size: 0.9em; background: #f0f0f0; padding: 4px 8px; border-radius: 3px; }
+        .finding-content { display: none; padding: 0 20px 20px 20px; border-top: 1px solid #f0f0f0; }
+        .finding.expanded .finding-content { display: block; }
+        .metadata { color: #666; font-size: 0.9em; margin: 16px 0; padding: 10px; background: #f8f9fa; border-radius: 3px; }
+        .section { margin: 20px 0; }
+        .section-title { color: #2c3e50; font-weight: 600; margin-bottom: 10px; font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px; }
+        .explanation { background: #f8f9fa; padding: 15px; line-height: 1.7; border-left: 3px solid #3498db; }
+        .quote { background: #fff9e6; padding: 12px; margin: 8px 0; border-left: 3px solid #f39c12; }
+        .quote-text { color: #1a1a1a; font-style: italic; }
+        .verdict-box { background: #e8f5e9; padding: 15px; margin: 15px 0; border-left: 3px solid #4caf50; }
+        .verdict-title { font-weight: 600; color: #2e7d32; margin-bottom: 10px; }
+        .verdict-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 10px 0; }
+        .verdict-stat { background: white; padding: 10px; border-radius: 3px; }
+        .verdict-stat-label { font-size: 0.85em; color: #666; }
+        .verdict-stat-value { font-size: 1.2em; font-weight: 600; color: #2e7d32; }
+        .severity-badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-weight: 600; font-size: 0.9em; }
+        .sev-1, .sev-2 { background: #d4edda; color: #155724; }
+        .sev-3, .sev-4 { background: #fff3cd; color: #856404; }
+        .sev-5, .sev-6 { background: #f8d7da; color: #721c24; }
+        .sev-7 { background: #721c24; color: white; }
+        .source-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.8em; font-weight: 500; background: #e3f2fd; color: #1565c0; }
+        .source-badge.primary { background: #fce4ec; color: #880e4f; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Niculescu Textbook Analysis Report</h1>
+    <div class="subtitle">Manual Expert Audit — results_niculescu.jsonl</div>
+    <div class="summary">
+        <p><strong>Total findings:</strong> 20</p>
+        <p><strong>Average severity:</strong> 5.40/7 (7-point scale)</p>
+        <p><strong>High severity findings (≥5):</strong> 17</p>
+        <p><strong>Evaluation method:</strong> Manual expert annotation</p>
+    </div>
+    <div class="filter-bar">
+        <label>Filter by category:</label>
+        <button class="filter-btn active" data-filter="all" onclick="filterFindings(this)">All</button>
+        <button class="filter-btn" data-filter="Agency Attribution" onclick="filterFindings(this)">Agency Attribution</button>
+        <button class="filter-btn" data-filter="Asymmetrical Detail" onclick="filterFindings(this)">Asymmetrical Detail</button>
+        <button class="filter-btn" data-filter="Moral Loading & Linguistic Tone" onclick="filterFindings(this)">Moral Loading & Linguistic Tone</button>
+        <button class="filter-btn" data-filter="National or Cultural Centering" onclick="filterFindings(this)">National or Cultural Centering</button>
+        <button class="filter-btn" data-filter="Omission / Underdevelopment" onclick="filterFindings(this)">Omission / Underdevelopment</button>
+        <button class="filter-btn" data-filter="Primary Source Framing" onclick="filterFindings(this)">Primary Source Framing</button>
+        <button class="filter-btn" data-filter="Selection Bias" onclick="filterFindings(this)">Selection Bias</button>
+        <span class="filter-count" id="filter-count">20 of 20 shown</span>
+    </div>
+
+    <div class="finding" data-category="Agency Attribution" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Minimization of Romanian state agency in the Holocaust and the deportation of Jews and Roma.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Agency Attribution</div>
+                <div><span class="severity-badge sev-7">7/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 44 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text uses passive voice ('au fost deportați') and euphemistic language ('unii dintre ei au murit, din cauza regimului de detenție') to obscure the direct agency and genocidal intent of the Romanian state under Ion Antonescu. It fails to mention that the Romanian authorities actively orchestrated the massacres and deportations. Furthermore, it immediately pivots to praising Antonescu for refusing the 'Final Solution' for Jews in the Old Kingdom and highlights Romanians who saved Jews, creating an asymmetrical narrative that minimizes Romania's role as a perpetrator in the Holocaust.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Mulți evrei și romi au fost deportați în Transnistria, unde unii dintre ei au murit, din cauza regimului de detenție."</div></div>
+                <div class="quote"><div class="quote-text">"Totuși, Ion Antonescu a refuzat cererea lui Hitler de a aplica și pentru evreii din România „soluția finală”."</div></div>
+                <div class="quote"><div class="quote-text">"În timpul celui de-al Doilea Război Mondial, mulți români și-au manifestat solidaritatea cu evreii, iar unii dintre ei au fost răsplătiți de statul Israel cu titlul Drepți între popoarele lumii."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">7/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Agency Attribution</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Promotion of a myth of historical Romanian religious and ethnic tolerance to deflect from historical antisemitism.</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-7">7/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 117 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text constructs a nationalistic myth of inherent Romanian tolerance. When addressing the severe antisemitic laws and actions of the 1940-1944 period, the authors claim, without evidence, that the 'majority of the Romanian population did not agree' with them, invoking the 'tolerant tradition'. This is a profound distortion that seeks to culturally center the nation as inherently good, deflecting societal responsibility for the widespread antisemitism that existed in Romanian society leading up to and during the Holocaust.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"În spațiul românesc, toleranța religioasă are tradiție îndelungată. Oamenii aparținând altor etnii și credințe religioase s-au putut stabili aici, organizându-și viața de cult proprie."</div></div>
+                <div class="quote"><div class="quote-text">"În perioada 1940–1944, guvernele care s-au succedat la conducere au adoptat o serie de măsuri antisemite, cu care majoritatea populației românești nu era de acord, în spiritul tradiției tolerante existente de secole pe pământul românesc."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">7/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Eurocentric and derogatory description of pre-Columbian American civilizations.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-6">6/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 18 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook claims that at the time of the Europeans' arrival, the populations of the Americas were still in the 'Prehistoric stage'. This is a severe Eurocentric bias and factually incorrect, as civilizations like the Maya, Aztecs, and Incas had highly complex societies, urban centers, and, in the case of the Maya, fully developed writing systems. Labeling them as 'prehistoric' morally loads the text to justify or naturalize their subsequent conquest.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"În momentul sosirii europenilor, populațiile de pe continentul american se aflau încă în stadiul Preistoriei, ceea ce a facilitat cucerirea lor."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">6/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Omission / Underdevelopment" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Omission of Romania's aggressive role and war crimes on the Eastern Front during WWII.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Omission / Underdevelopment</div>
+                <div><span class="severity-badge sev-6">6/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 100 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook frames Romania's entry into WWII strictly as a war of liberation to recover lost territories. It completely omits the Romanian army's active participation in the invasion of the Soviet Union deep into foreign territory (e.g., Odessa, Stalingrad) and the massive war crimes committed there. By merely stating that crossing the Dniester was 'not supported by the majority of society', it absolves the state of its aggressive actions and ideological alignment with Nazi Germany.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Pentru a-și recupera teritoriile pierdute, statul român a intrat în războiul antisovietic la 22 iunie 1941, eliberând provinciile ocupate de U.R.S.S."</div></div>
+                <div class="quote"><div class="quote-text">"Continuarea războiului peste Nistru nu a fost susținută de cea mai mare parte a societății românești."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">6/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Omission / Underdevelopment</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Omission / Underdevelopment" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Underdevelopment and sanitization of the Romanian fascist movement (The Iron Guard).</div>
+            <div class="finding-meta">
+                <div class="finding-category">Omission / Underdevelopment</div>
+                <div><span class="severity-badge sev-6">6/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 48 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">While the textbook explicitly details the racist, antisemitic, and terroristic nature of German Nazism on the exact same page, it describes the domestic Romanian Legionary Movement merely as an 'extreme right' group that 'enjoyed popularity'. It completely omits their virulent antisemitism, death squads, and political assassinations in this defining section, effectively sanitizing domestic fascism compared to foreign fascism.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Întemeiată în 1927, mișcarea legionară, de extremă dreapta s-a numit ulterior Garda de Fier, bucurându-se de popularitate în rândul anumitor categorii ale populației."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">6/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Omission / Underdevelopment</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Benevolent framing of Ion Antonescu's military dictatorship.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-6">6/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 54 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook attributes purely patriotic and administrative motives ('maintaining order', 'liberating' territories) to Ion Antonescu's regime. This moral loading obfuscates the dictatorial, fascist-aligned, and genocidal realities of his government, presenting him instead as a pragmatic defender of the nation.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"...cel militar al generalului Antonescu, care dorea menținerea ordinii în stat, în condițiile pregătirii războiului antisovietic pentru eliberarea Basarabiei și nordului Bucovinei."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">6/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Asymmetrical Detail" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Asymmetrical portrayal of minority treatment in the Austro-Hungarian Empire versus Interwar Romania.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Asymmetrical Detail</div>
+                <div><span class="severity-badge sev-6">6/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 40 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">On page 40, the text emphasizes the 'denationalization' policies of the Austro-Hungarian Empire against Romanians. However, on page 44, when discussing minorities within Greater Romania, the text claims 'Fiecare minoritate națională... a avut posibilitatea de a-și conserva tradițiile'. This asymmetrical detail completely omits the aggressive Romanianization policies, state-sponsored discrimination, and cultural assimilation efforts directed at Hungarians, Germans, Jews, and Bulgarians by the Romanian state during the interwar period.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Nevoiți să trăiască sub stăpânire habsburgică, apoi austro-ungară (din 1867), românii din Transilvania, Banat și Bucovina au fost supuși unei ample politici de deznaționalizare."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">6/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Asymmetrical Detail</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Sanitization of the violent 1990 Mineriads (miners' interventions) in post-communist Romania.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-6">6/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 86 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The violent suppression of anti-communist protesters in University Square by coal miners called in by the state (the Mineriads) is euphemistically reduced to mere 'tense moments' and 'descents of the miners' (descinderile minerilor). This severe underdevelopment and neutral linguistic tone obscures the newly formed government's role in orchestrating violence against its own citizens, effectively sanitizing the abuses of the early post-communist regime.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Revenirea la regimul democratic nu a fost lipsită de momente tensionate, așa cum au fost conflictul interetnic de la Târgu-Mureș (martie 1990), fenomenul manifestației-maraton din Piața Universității din București (1990), descinderile minerilor în Capitală (1990; 1991; 1999)."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">6/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Omission / Underdevelopment" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Ignoring severe Church-State conflicts and the Orthodox Church's extreme-right complicity in the Interwar period.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Omission / Underdevelopment</div>
+                <div><span class="severity-badge sev-6">6/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 116 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The assertion that there were 'no misunderstandings' between the Church and the Romanian state prior to communism is factually incorrect and represents a significant omission. It ignores the intense political battles over the 1927 Concordat with the Vatican, the friction between the Orthodox and Greek-Catholic churches, and the deeply controversial alignment of many Orthodox clerics with the fascist Iron Guard, presenting instead a sanitized, harmonious myth of Church-State relations.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Până la instaurarea comunismului, nu existau neînțelegeri în privința relațiilor dintre Biserică și statul român."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">6/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Omission / Underdevelopment</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Selection Bias" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Framing of the Romanian ethnogenesis and the immigrationist theory (Roesler's theory).</div>
+            <div class="finding-meta">
+                <div class="finding-category">Selection Bias</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 12 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook presents the immigrationist theory (Roesler's theory) primarily as a political tool used against Romanians, which was subsequently 'defeated' by Romanian historians. By explicitly labeling the Romanian continuity theory as being established on 'scientific bases' (pe baze științifice) while implicitly denying such validity to opposing theories, the text demonstrates selection bias and national centering. It frames historiographical debates as a settled national victory rather than an ongoing academic discourse.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Teoria imigraționistă, care îi prezenta pe români ca fiind un popor format la sud de Dunăre, de unde ar fi imigrat la nord de fluviu abia prin secolul al XIII-lea... a fost combătută de membrii Școlii Ardelene"</div></div>
+                <div class="quote"><div class="quote-text">"Față de teoria roesleriană au luat poziție, între alții, istoricii B.P. Hasdeu și A.D. Xenopol... conturându-se astfel, pe baze științifice, teoria continuității românilor în spațiul carpato-danubiano-pontic."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Selection Bias</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Teleological framing of the 1918 Great Union.</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 72 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook presents the unification of 1918 as the inevitable, teleological culmination of a historical destiny ('desăvârșirii unității sale naționale'). This national-centric narrative ignores the complex, highly contingent geopolitical circumstances of World War I, the collapse of empires, and the diverse perspectives of the ethnic minorities living in those territories, reducing the entire conflict to a vehicle for Romanian national fulfillment.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"România a participat la Primul Război Mondial cu scopul desăvârșirii unității sale naționale, proces îndeplinit în anul 1918 prin voința românilor din provinciile aflate până atunci sub stăpânire străină."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Agency Attribution" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Externalizing the blame for the communist takeover entirely on the Soviet Union.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Agency Attribution</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 80 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.85
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The narrative attributes the communist takeover almost exclusively to external Soviet pressure and military occupation. While factually grounded, this framing strips agency from domestic actors, ignoring local communist factions, opportunists, and the socio-economic conditions in Romania that facilitated the regime change, thus preserving the myth of an innocent nation victimized solely by foreign powers.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"După 23 august 1944 a început procesul de comunizare a țării, sub presiunile U.R.S.S. și cu concursul trupelor sovietice de ocupație."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.85</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Agency Attribution</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Projecting modern national borders backward onto 18th-century imperial annexations.</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 94 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook refers to the 18th and early 19th-century annexations of regions like Banat, Bucovina, and Bessarabia as the ceding of 'Romanian territories' (teritorii românești). This is an anachronistic, national-centric projection that applies the modern concept of a unified Romanian nation-state to medieval/early modern feudal principalities, ignoring the multi-ethnic realities and the dynastic/imperial nature of geopolitics at the time.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Încălcarea autonomiei Principatelor de către otomani s-a manifestat și prin cedarea de către aceștia a unor teritorii românești, prin tratatele de pace încheiate în urma războaielor ruso-austro-otomane: Banatul și Oltenia... Bucovina... Basarabia..."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Selection Bias" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Romanticizing the anti-communist mountain resistance while omitting their ideological backgrounds.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Selection Bias</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 84 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.85
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">While the text briefly lists 'foști legionari' (former Legionnaires) among the partisans, it lumps them together with peasants and democratic opposition, framing the entire movement as a heroic, unified national struggle for liberty. It omits the fact that many of these groups were driven by extreme-right, fascist ideologies rather than democratic ideals, resulting in a sanitized, heroic national myth.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Principalele manifestări ale luptei anticomuniste au fost rezistența armată a grupurilor din munți... organizată de grupurile înarmate de partizani alcătuite din foste cadre militare, foști legionari, membri ai partidelor de opoziție, țărani."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.85</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Selection Bias</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Teleological projection of modern national unification onto the feudal conquests of Michael the Brave.</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 92 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook projects the 19th-century modern concept of the 'national unification' of Romanians backward onto the year 1600. Modern historiography widely views Michael the Brave's campaigns as feudal, dynastic conquests typical of the era, not a conscious project of ethnic nation-building. Framing his military expansion as 'Unirea Țărilor Române' represents a teleological and national-centric bias designed to provide historical precedent for the 1918 Great Union.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Mihai Viteazul a inițiat acțiunile pentru unirea Țărilor Române."</div></div>
+                <div class="quote"><div class="quote-text">"Transilvania a fost unită cu Țara Românească după victoria obținută de Mihai... iar Moldova i s-a supus în primăvara anului 1600."</div></div>
+                <div class="quote"><div class="quote-text">"Unirea Țărilor Române nu a durat decât câteva luni..."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Omission / Underdevelopment" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Exclusively negative, romantic-nationalist framing of the Phanariot period.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Omission / Underdevelopment</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 68 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook relies on outdated, 19th-century nationalist historiography that paints the Phanariot century exclusively as a 'dark age' of exploitation, corruption, and 'Greekization'. It omits modern historiographical consensus which highlights the Phanariots' crucial role in abolishing serfdom (Constantin Mavrocordat), introducing modern legal codes, and integrating the Principalities into the broader Enlightenment cultural sphere.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"În ambele Principate, regimul politic fanariot a durat până în anul 1821, având aceleași trăsături caracteristice: grecizarea domniei și a altor instituții laice sau ecleziastice (în defavoarea boierimii autohtone)... fiscalitatea excesivă, sporirea obligațiilor față de Imperiul Otoman."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Omission / Underdevelopment</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Framing medieval Hungarian feudal-religious policies as modern ethnic exclusion.</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 66 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text frames the 1366 decrees of Louis I of Anjou primarily as a national/ethnic exclusion targeting 'Romanians'. In reality, the decrees were feudal and religious in nature, aimed at consolidating Catholic royal authority against Orthodox elites regardless of ethnicity (including Slavic Orthodox nobles). Projecting modern ethnic conflict onto medieval religious-feudal policies is a clear example of national centering.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"În 1366, regele maghiar Ludovic I de Anjou a condiționat calitatea de nobil de apartenența la religia catolică, românii ortodocși fiind excluși treptat din viața politică."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Asymmetrical Detail" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Overstatement of Romanian autonomy and the 'Late Crusade' narrative against the Ottoman Empire.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Asymmetrical Detail</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 90 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.85
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text heavily leans into the traditional Romanian historiographical myth of the Principalities acting as the 'shield of Europe' (cruciadă târzie) and emphasizes their 'internal autonomy'. While mentioning the tribute, it rationalizes the lack of Ottoman conquest as a pragmatic economic choice by the Ottomans rather than acknowledging the severe degree of political subordination and vassalage, thus providing asymmetrical detail that flatters national pride.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"De la sfârșitul secolului al XIV-lea, românii au susținut politica de „cruciadă târzie”."</div></div>
+                <div class="quote"><div class="quote-text">"Țările Române nu au fost cucerite de otomani, și-au păstrat autonomia internă, dar au plătit un tribut anual către sultan."</div></div>
+                <div class="quote"><div class="quote-text">"De aceea, se poate considera că otomanii au avut mai multe avantaje din exploatarea indirectă a spațiului românesc, decât dacă l-ar fi cucerit direct."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.85</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Asymmetrical Detail</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Primary Source Framing" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Biased selection of primary sources to validate the Romanian continuity theory.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Primary Source Framing</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 11 &nbsp;|&nbsp;
+                <span class="source-badge primary">Primary Source</span>
+                &nbsp;|&nbsp; Confidence: 0.85
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook presents a series of primary sources (Miron Costin, Dimitrie Cantemir, Petru Maior) that uniformly assert the direct Roman origin of Romanians. These sources are presented as historical proof rather than as early modern nation-building myths. The framing directs students to accept these texts as objective evidence of continuity, ignoring the political and ideological contexts in which these chronicles were written.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Numele cel mai adevărat, autentic, de la primul descălecat al lui Traian, este rumân sau romanus..."</div></div>
+                <div class="quote"><div class="quote-text">"Întregul nostru neam românesc se vădește, printr-o tradiție veșnică parcă, a-și trage începutul din cetățeni romani..."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.85</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Primary Source Framing</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Primary Source</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Asymmetrical Detail" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Exaggerating Romania's role as a benevolent protector of other Balkan nations.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Asymmetrical Detail</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 42 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.80
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text highlights Romania's support for Bulgarian and Albanian national movements, portraying the Romanian state as a selfless beacon of liberty in the Balkans. This asymmetrical detail ignores Romania's own imperialistic ambitions in the region (e.g., the annexation of Southern Dobruja from Bulgaria in 1913) and centers the Romanian state as morally superior.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"România a reprezentat un sprijin important pentru popoarele din Peninsula Balcanică. Mulți reprezentanți ai bulgarilor sau albanezilor au sosit în România, unde au putut să-și desfășoare activitățile patriotice..."</div></div>
+                <div class="quote"><div class="quote-text">"...patrioții albanezi... au considerat că România este a doua lor patrie..."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.80</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Asymmetrical Detail</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function filterFindings(btn) {
+        const filter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const findings = document.querySelectorAll('.finding');
+        let visible = 0;
+        findings.forEach(f => {
+            if (filter === 'all' || f.getAttribute('data-category') === filter) {
+                f.classList.remove('hidden'); visible++;
+            } else {
+                f.classList.add('hidden');
+                f.classList.remove('expanded');
+            }
+        });
+        document.getElementById('filter-count').textContent = visible + ' of 20 shown';
+    }
+</script>
+</body>
+</html>

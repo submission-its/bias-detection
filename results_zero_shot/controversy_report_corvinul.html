@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corvinul — Manual Audit</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6; color: #1a1a1a; background: #f8f9fa; padding: 40px 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: #2c3e50; font-size: 2em; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.5px; }
+        .subtitle { color: #666; margin-bottom: 30px; font-size: 0.95em; }
+        .summary {
+            background: white; padding: 20px; margin-bottom: 20px;
+            border-left: 4px solid #2c3e50; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .summary p { margin: 8px 0; color: #555; }
+        .summary strong { color: #2c3e50; }
+        .filter-bar {
+            background: white; padding: 16px 20px; margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+        }
+        .filter-bar label { font-weight: 600; color: #2c3e50; font-size: 0.9em; white-space: nowrap; }
+        .filter-btn {
+            padding: 5px 14px; border: 1px solid #d0d0d0; border-radius: 20px;
+            background: #f8f9fa; color: #444; font-size: 0.85em; cursor: pointer;
+            transition: all 0.15s; white-space: nowrap;
+        }
+        .filter-btn:hover { border-color: #2c3e50; color: #2c3e50; }
+        .filter-btn.active { background: #2c3e50; border-color: #2c3e50; color: white; }
+        .filter-count { margin-left: auto; font-size: 0.85em; color: #888; }
+        .finding { background: white; margin-bottom: 1px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .finding.hidden { display: none; }
+        .finding-header {
+            padding: 20px; cursor: pointer; display: flex;
+            justify-content: space-between; align-items: center;
+            user-select: none; transition: background-color 0.2s;
+        }
+        .finding-header:hover { background: #f8f9fa; }
+        .finding-title { color: #2c3e50; font-weight: 500; flex: 1; margin-right: 20px; }
+        .finding-meta { display: flex; gap: 15px; align-items: center; }
+        .finding-category { color: #666; font-size: 0.9em; background: #f0f0f0; padding: 4px 8px; border-radius: 3px; }
+        .finding-content { display: none; padding: 0 20px 20px 20px; border-top: 1px solid #f0f0f0; }
+        .finding.expanded .finding-content { display: block; }
+        .metadata { color: #666; font-size: 0.9em; margin: 16px 0; padding: 10px; background: #f8f9fa; border-radius: 3px; }
+        .section { margin: 20px 0; }
+        .section-title { color: #2c3e50; font-weight: 600; margin-bottom: 10px; font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px; }
+        .explanation { background: #f8f9fa; padding: 15px; line-height: 1.7; border-left: 3px solid #3498db; }
+        .quote { background: #fff9e6; padding: 12px; margin: 8px 0; border-left: 3px solid #f39c12; }
+        .quote-text { color: #1a1a1a; font-style: italic; }
+        .verdict-box { background: #e8f5e9; padding: 15px; margin: 15px 0; border-left: 3px solid #4caf50; }
+        .verdict-title { font-weight: 600; color: #2e7d32; margin-bottom: 10px; }
+        .verdict-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 10px 0; }
+        .verdict-stat { background: white; padding: 10px; border-radius: 3px; }
+        .verdict-stat-label { font-size: 0.85em; color: #666; }
+        .verdict-stat-value { font-size: 1.2em; font-weight: 600; color: #2e7d32; }
+        .severity-badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-weight: 600; font-size: 0.9em; }
+        .sev-1, .sev-2 { background: #d4edda; color: #155724; }
+        .sev-3, .sev-4 { background: #fff3cd; color: #856404; }
+        .sev-5, .sev-6 { background: #f8d7da; color: #721c24; }
+        .sev-7 { background: #721c24; color: white; }
+        .source-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.8em; font-weight: 500; background: #e3f2fd; color: #1565c0; }
+        .source-badge.primary { background: #fce4ec; color: #880e4f; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Corvinul Textbook Analysis Report</h1>
+    <div class="subtitle">Manual Expert Audit — results_corvinul.jsonl</div>
+    <div class="summary">
+        <p><strong>Total findings:</strong> 29</p>
+        <p><strong>Average severity:</strong> 4.34/7 (7-point scale)</p>
+        <p><strong>High severity findings (≥5):</strong> 12</p>
+        <p><strong>Evaluation method:</strong> Manual expert annotation</p>
+    </div>
+    <div class="filter-bar">
+        <label>Filter by category:</label>
+        <button class="filter-btn active" data-filter="all" onclick="filterFindings(this)">All</button>
+        <button class="filter-btn" data-filter="Agency Attribution" onclick="filterFindings(this)">Agency Attribution</button>
+        <button class="filter-btn" data-filter="Moral Loading & Linguistic Tone" onclick="filterFindings(this)">Moral Loading & Linguistic Tone</button>
+        <button class="filter-btn" data-filter="National or Cultural Centering" onclick="filterFindings(this)">National or Cultural Centering</button>
+        <button class="filter-btn" data-filter="Omission / Underdevelopment" onclick="filterFindings(this)">Omission / Underdevelopment</button>
+        <button class="filter-btn" data-filter="Primary Source Framing" onclick="filterFindings(this)">Primary Source Framing</button>
+        <button class="filter-btn" data-filter="Selection Bias" onclick="filterFindings(this)">Selection Bias</button>
+        <span class="filter-count" id="filter-count">29 of 29 shown</span>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">The adoption of a highly subjective, first-person defensive tone regarding Romania's international image post-1989.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-7">7/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 35 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 1.00
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The authors abandon academic and historical neutrality, explicitly identifying with the national collective through first-person plural pronouns ('we are indignant', 'our country'). Instead of objectively analyzing why the international press focused on systemic post-communist issues (like institutionalized children and corruption), the textbook adopts an emotionally loaded, highly defensive stance aimed at shielding the nation's reputation and instructing students to feel nationalistic indignation.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Când presa străină generalizează și consideră România o țară coruptă și săracă, dar cu un grad ridicat de infracționalitate, suntem indignați și afirmăm răspicat că aceasta este o imagine deformată a țării noastre, pentru că în realitate lucrurile nu stau chiar atât de rău."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">7/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">1.00</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Agency Attribution" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Externalizing all blame for the installation of the communist regime in Romania.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Agency Attribution</div>
+                <div><span class="severity-badge sev-6">6/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 28 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text places the entirety of the blame for Romania's communist regime on external forces ('Iron Curtain', 'brutally imposed foreign Stalinist models'), portraying the nation exclusively as a passive victim ('forced to stay'). By doing so, the narrative strips away local agency, completely omitting the role of domestic communist factions, societal complicity, and internal socio-economic conditions that facilitated the regime's rise and decades-long maintenance.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Cortina de fier lăsată asupra Europei după cel de-al doilea război mondial, în spatele căreia România a fost nevoită să stea vreme de aproape cinci decenii, a oprit evoluția țării pe coordonate democratice."</div></div>
+                <div class="quote"><div class="quote-text">"Un proces evolutiv care se derulase firesc vreme îndelungată și cu rezultate vizibile în toate compartimentele vieții statului român a fost grav compromis de impunerea brutală a modelelor străine staliniste."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">6/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Agency Attribution</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Teleological Dismissal of Socialism</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-6">6/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 18 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook explicitly states that socialism is proven to be 'something necessary to be overcome.' This is not a neutral historical observation but an ideological judgment presented as factual inevitability (teleology), reflecting the post-1989 anti-communist consensus in Eastern Europe.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"In realitate, contextul este mult mai complex, cu atât mai mult cu cât, la scara istoriei, socialismul se dovedește ceva necesar a fi depășit."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">6/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Omission / Underdevelopment" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Understatement of the Great Leap Forward's Human Cost</div>
+            <div class="finding-meta">
+                <div class="finding-category">Omission / Underdevelopment</div>
+                <div><span class="severity-badge sev-6">6/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 86 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook describes the Great Leap Forward merely as a failure leading to 'economic difficulties' and 'political tensions.' This is a significant underdevelopment, as it omits the massive famine and the death of tens of millions of people, which is the defining humanitarian characteristic of that event. The language sanitizes a demographic catastrophe.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Eșecul „Marelui salt înainte” a deschis o perioadă de dificultăți economice și de tensiuni politice."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">6/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Omission / Underdevelopment</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Omission / Underdevelopment" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">The textbook's sanitized characterization of European colonialism and imperialism.</div>
+            <div class="finding-meta">
+                <div class="finding-category">Omission / Underdevelopment</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 23 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text uses the highly sanitized and Eurocentric euphemism 'export of civilization' to describe the colonial era. By emphasizing the 'diffusion of cultural and religious values and European technology,' it systematically underdevelops the exploitative, violent, and extractive realities of imperialism, centering the narrative around European technological benevolence while downplaying the trauma and exploitation experienced by colonized peoples.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"„Exportul de civilizație” sub forma difuziunii valorilor culturale și religioase și a tehnologiei europene dinspre Europa spre celelalte continente a influențat profund situația popoarelor din colonii."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Omission / Underdevelopment</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">The teleological and completely idealized framing of Romania's 1918 territorial expansion.</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 24 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook presents the 1918 Great Union purely as the fulfillment of an idealized, pre-ordained 'national destiny' and the absolute foundation of a 'democratic Romania'. This celebratory approach mythologizes the state-building process, largely ignoring the severe interethnic complexities, the political instability, and the substantial difficulties Romania faced in actually consolidating a democratic system during the interwar period.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Înfăptuirea idealului național în anul 1918, premisă a unei Românii democratice"</div></div>
+                <div class="quote"><div class="quote-text">"Intrată în 1916 în „Marele Război” de partea Antantei în vederea desăvârșirii unității politico-naționale, țara cunoaște euforia succesului de început..."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Teleological framing of National History</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 1 &nbsp;|&nbsp;
+                <span class="source-badge primary">Primary Source</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The primary source (Gafencu) uses highly romanticized, teleological language ('miracle of elevation,' 'uniting the kin') to describe Romanian history. By including this in the 'Personality' sidebar without critical analysis, the textbook endorses a nationalist, romantic historiography that views the nation-state as a mystical destiny rather than a political construct.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Constituția noastră [...] a consfințit-o, în decursul anilor, istoria națională, a îngăduit celor doi mari regi ai trecutului nostru și sfetnicilor lor să îndeplinească minunea înălțării și a unirii neamului nostru."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Primary Source</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Omission / Underdevelopment" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Sanitization of Interwar Intellectuals</div>
+            <div class="finding-meta">
+                <div class="finding-category">Omission / Underdevelopment</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 29 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text lists Eliade and Cioran as cultural heroes of the diaspora who fled communism. It omits significant controversy regarding their pre-war fascist sympathies (Iron Guard affiliations). Presenting them solely as victims of communism/exiles creates a sanitized narrative of the Romanian intelligentsia.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Diaspora românească are o îndelungată tradiție... intelectuali precum Mircea Eliade, Emil Cioran..."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Omission / Underdevelopment</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">National Priority in Science (Insulin)</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 30 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook asserts definitively that Paulescu discovered insulin and that the Nobel Committee 'recognized his priority' later. While Paulescu made significant contributions, the scientific consensus is nuanced, and the Nobel controversy is often utilized in Romanian historiography to construct a narrative of victimhood or unrecognized genius by the West.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Comitetul Nobel a recunoscut în 1969 meritele și prioritatea cercetătorului român în descoperirea insulinei."</div></div>
+                <div class="quote"><div class="quote-text">"N.C. Paulescu descoperă ceea ce se va numi insulină"</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Omission / Underdevelopment" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Elitist Framing of the Peasant Question</div>
+            <div class="finding-meta">
+                <div class="finding-category">Omission / Underdevelopment</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 92 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The section on the 'Peasant Problem' and the 1907 revolt is presented entirely through the lens of parliamentary debates between elite politicians (Liberals vs. Conservatives). The agency, voice, or direct perspective of the peasantry—the majority of the population and the victims of the events—is omitted in favor of high-level political discourse.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"D-lor, nu m-am despărțit de direcțiunea partidului liberal pe vreo idee secundară..."</div></div>
+                <div class="quote"><div class="quote-text">"Barbu Delavrancea... își exprima ostilitatea împotriva liberalismului practicat de urmașii lui I.C. Brătianu."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Omission / Underdevelopment</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Pejorative Description of Poland and Hungary (1938)</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 1 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook uses the highly charged and non-academic term 'jackal states' (state șacal) to describe Poland and Hungary's participation in the partition of Czechoslovakia. This constitutes strong emotive language and moral judgment rather than neutral historical description.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"împărțirea Cehoslovaciei de către Germania (împreună cu Polonia și Ungaria, devenite un fel de state șacal)"</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Selection Bias" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Association of Islam Primarily with Radicalization</div>
+            <div class="finding-meta">
+                <div class="finding-category">Selection Bias</div>
+                <div><span class="severity-badge sev-5">5/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 26 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The section on Islam focuses disproportionately on 'radicalization,' 'terrorism,' and political conflict compared to the sections on Christianity. This selection bias reinforces stereotypes by defining the religion's modern history primarily through the lens of violence and extremism.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"De la începutul secolului XX, islamismul a câștigat tot mai mult teren și s-a radicalizat."</div></div>
+                <div class="quote"><div class="quote-text">"Talibanii... regim politic asociat mai mereu cu atentatele teroriste"</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">5/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Selection Bias</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Eurocentric and Christian-centric definition of modern civilization.</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 13 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.85
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The narrative strictly centers Christian values as the bedrock of European civilization and characterizes the 20th century as a march toward 'continuous moral and spiritual perfection'. This perspective marginalizes the contributions of secular, non-Christian, or minority groups to European identity, and creates an overly sanitized, teleological view of European history that downplays the profound moral failures (such as totalitarianism and the Holocaust) that also defined the century.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Civilizația europeană are la temelie valorile creștine aflate mereu într-un proces de transformare și de adaptare la realitățile vremii."</div></div>
+                <div class="quote"><div class="quote-text">"Cultura secolului al XX-lea conține contribuții remarcabile care îndeamnă la o continuă perfecționare morală și spirituală."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.85</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Attribution of European Federalism</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 1 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text positions Romanian diplomat Grigore Gafencu as a central architect of the European Union ('European Movement'). While Gafencu was involved in the Pan-European movement, attributing the conceptualization of the EU so strongly to him, alongside 'illustrious names' (implicitly Western founders like Monnet), is an example of elevating a national figure to a central role in a global narrative to foster national pride.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Grigore Gafencu dezvăluie proiectul privind realizarea unei federații a statelor europene"</div></div>
+                <div class="quote"><div class="quote-text">"Gafencu [...] dovedește apartenența diplomatului român la salba numelor ilustre care au gândit crearea celei mai democratice și mai profunde solidarități a popoarelor continentului nostru, Uniunea Europeană."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Ideological Framing of Communism vs. 'Modernity'</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 12 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text creates a dichotomy where 'modernity' is exclusively defined by Western liberal values (individualism, pluralism), while the Communist bloc and the 'Third World' are framed implicitly as deviations from this correct path. This is a teleological modernization narrative that equates 'Western' with 'Modern' and 'Good.'</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Dezvoltarea inegală pune adesea laolaltă 'tradiționalul' și 'modernul'"</div></div>
+                <div class="quote"><div class="quote-text">"Valorile se transformă - pluralismul, libertatea, responsabilitatea, individualismul devin cuvinte-cheie ale societăților occidentale"</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Negative Self-Stereotyping/Essentialism</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 26 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.85
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The selection of sources (Alina Mungiu Pippidi) and the narrative frame rural Romania through a lens of 'curse' and backwardness ('subsistence'). While economically accurate regarding subsistence, the framing uses essentialist tropes about Romanian rural fatalism ('the curse') rather than analyzing structural economic policy failures.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Pământul din bătătură / Ne-ai scos viile și pomii... Ca blestem pe-acest pământ"</div></div>
+                <div class="quote"><div class="quote-text">"Agricultura României, la începutul secolului XXI, este încă una de subzistență"</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.85</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Ideological Valorization of Liberal Democracy</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 34 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The framing of liberal democracy and neoliberalism is celebratory rather than analytical. It presents the Western political model not just as one system among many, but as the 'victory of ideals of justice,' reinforcing a 'End of History' narrative common in post-Cold War textbooks.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Neoliberalismul s-a alăturat tendințelor acestui model politic și democrației."</div></div>
+                <div class="quote"><div class="quote-text">"Secolul nostru [...] demonstrează că victoria idealurilor de justiție și egalitate este întotdeauna efemeră, dar și faptul că, dacă reușim să ne păstrăm libertatea, putem relua totul de la capăt..."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Agency Attribution" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">US Agency in Japanese Democratization</div>
+            <div class="finding-meta">
+                <div class="finding-category">Agency Attribution</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 72 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The narrative attributes the democratization of Japan almost exclusively to external American pressure and General MacArthur ('Mac Arthur a impus'). While historically significant, this framing minimizes internal Japanese political dynamics or the agency of Japanese liberals, presenting the reforms as a unilateral imposition ('vastă epurare', 'impus').</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"O vastă epurare a urmat în țară, care sub presiunea ocupantului american trebuia să întreprindă reforme profunde."</div></div>
+                <div class="quote"><div class="quote-text">"Din 1946, Mac Arthur a impus Japoniei noile sale instituții."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Agency Attribution</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Eurocentric Framing of Decolonization (Algerian War)</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 76 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.80
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The discussion of the transition to the Fifth Republic mentions the colonial context and the Algerian War (implied via the crisis), but focuses almost entirely on the political stability of the French state and the constitutional crisis. It omits the violence of the colonization and the decolonization war itself, centering the narrative on the French metropolis rather than the colonized peoples.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"După 1945, Franța era afectată de război."</div></div>
+                <div class="quote"><div class="quote-text">"criza a partidelor politice. Acestea au fost dezorientate în fața unui regim care nu le lăsa altă alternativă decât aprobarea politicii șefului statului sau opoziția."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.80</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Explicit Moral Judgment of Appeasement</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 106 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.95
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The narrative text explicitly labels the policy of appeasement (conciliatorism) as 'blamabil' (blameworthy/reprehensible). This is a breach of neutral historiographical tone, imposing a retrospective moral judgment on historical actors rather than simply analyzing the causes and consequences of the policy failure.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Conciliatorismul interbelic este blamabil deoarece a pornit de la premise eronat înțelese."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.95</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Exclusionary Definition of the National Church</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 30 &nbsp;|&nbsp;
+                <span class="source-badge primary">Primary Source</span>
+                &nbsp;|&nbsp; Confidence: 0.85
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The selected primary source (Radu Preda) explicitly links the Orthodox Church to the concept of the 'National Church' and the formation of the nation-state. This framing marginalizes other historical religious communities in Romania (Greek-Catholic, Protestant) from the core narrative of nation-building.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Biserica Națională este Biserica unei națiuni care, prin continuitate istorică, reprezintă axa istorică a formării națiunii-stat."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.85</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Primary Source</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Moral Loading & Linguistic Tone" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Negative Framing of Multiculturalism</div>
+            <div class="finding-meta">
+                <div class="finding-category">Moral Loading & Linguistic Tone</div>
+                <div><span class="severity-badge sev-4">4/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 30 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.80
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The narrative presents a warning that multiculturalism, if pursued as an end in itself, leads to 'chauvinism' (specifically of the minority against the majority). This reflects a specific political anxiety regarding minority rights rather than a neutral sociological description.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Dacă multiculturalismul devine un scop în sine, se poate ajunge la izolaționism, la intoleranță sau chiar la șovinism"</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">4/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.80</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Moral Loading & Linguistic Tone</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Eurocentric Visual Hierarchy</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-3">3/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 3 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.85
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The introductory visual collage for 'People, Society and the World of Ideas' in the 20th century exclusively features European imagery (Austrian art, German political events). This reinforces a Eurocentric worldview where the cultural and political history of the 20th century is synonymous with the history of Europe, omitting the Global South.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Gustave Klimt, Fată tânără (1912)"</div></div>
+                <div class="quote"><div class="quote-text">"Grafitti cu un Trabant trecând prin Zidul Berlinului"</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">3/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.85</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Selection Bias" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Universalization of Bourgeois Domesticity</div>
+            <div class="finding-meta">
+                <div class="finding-category">Selection Bias</div>
+                <div><span class="severity-badge sev-3">3/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 4 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.80
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text presents the separation of workspace and domestic space as a universal 20th-century evolution. This generalizes the experience of the Western industrialized middle class to the whole world, ignoring that for large agrarian populations (including much of Romania for the first half of the century) and the working poor, this separation was not the defining experience.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Context: Prima evoluție a secolului XX privește munca. Aceasta emigrează din sfera privată și se avântă în sfera publică."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">3/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.80</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Selection Bias</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Selection Bias" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Framing of British Political Parties</div>
+            <div class="finding-meta">
+                <div class="finding-category">Selection Bias</div>
+                <div><span class="severity-badge sev-3">3/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 71 &nbsp;|&nbsp;
+                <span class="source-badge primary">Primary Source</span>
+                &nbsp;|&nbsp; Confidence: 0.85
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook uses a quote from an unnamed 'American journalist' (Doc. 2) to characterize the British political landscape. This selection generalizes the electorate's intent and subtly frames the Conservative party as the competent administrators of the state, while relegating Labour to merely the creators of the welfare state, introducing an ideological bias regarding governance competence.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Britanicii, țin la statul providențial pe care li l-au dat laburiștii, însă preferă să-l vadă administrat de conservatori"</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">3/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.85</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Selection Bias</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Primary Source</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Primary Source Framing" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Framing Fascism as a Reaction to Communism</div>
+            <div class="finding-meta">
+                <div class="finding-category">Primary Source Framing</div>
+                <div><span class="severity-badge sev-3">3/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 88 &nbsp;|&nbsp;
+                <span class="source-badge primary">Primary Source</span>
+                &nbsp;|&nbsp; Confidence: 0.80
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">By selecting Winston Churchill's quote defining Fascism as the 'monstrous child of communism,' the textbook reinforces a specific historiographical theory (Nolte's thesis or similar reactionary theories) that frames Fascism primarily as a defensive reaction to the Left, potentially mitigating its independent ideological roots in nationalism and syndicalism.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Fascismul a fost „umbra sau mai degrabă copilul monstruos al comunismului.” (W. Churchill)"</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">3/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.80</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Primary Source Framing</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Primary Source</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="Agency Attribution" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Uncritical Framing of NATO Interventions</div>
+            <div class="finding-meta">
+                <div class="finding-category">Agency Attribution</div>
+                <div><span class="severity-badge sev-3">3/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 12 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.85
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The text frames NATO's post-Cold War expansion and military interventions exclusively through positive euphemisms like 'peace-making' and 'crisis management.' It omits critical geopolitical perspectives or controversies regarding the legality of interventions (e.g., Yugoslavia 1999) without UN mandates, attributing purely benevolent agency to the alliance.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"NATO și-a propus să participe la gestionarea crizelor, să se angajeze în misiuni de menținere a păcii și impunerea păcii (peace-keeping, respectiv peace-making)."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">3/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.85</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">Agency Attribution</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Essentialist Generalization of Romanian National Character</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-3">3/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 14 &nbsp;|&nbsp;
+                <span class="source-badge primary">Primary Source</span>
+                &nbsp;|&nbsp; Confidence: 0.90
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The textbook utilizes a primary source from historian Lucian Boia that generalizes the Romanian national character as 'superficial' and lacking perseverance. This promotes a form of self-orientalism or cultural essentialism, presenting a subjective interpretation of national psychology as historical insight.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"românii au dovedit întotdeauna o extraordinară capacitate de a recepta modele. Au avut, e drept, și înclinarea de a le trata superficial și de a nu persevera în aplicarea lor."</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">3/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.90</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Primary Source</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding" data-category="National or Cultural Centering" onclick="this.classList.toggle('expanded')">
+        <div class="finding-header">
+            <div class="finding-title">Victimhood Narrative Regarding WWII Outcome</div>
+            <div class="finding-meta">
+                <div class="finding-category">National or Cultural Centering</div>
+                <div><span class="severity-badge sev-3">3/7</span></div>
+            </div>
+        </div>
+        <div class="finding-content">
+            <div class="metadata">
+                Page 19 &nbsp;|&nbsp;
+                <span class="source-badge ">Textbook Narrative</span>
+                &nbsp;|&nbsp; Confidence: 0.80
+            </div>
+            <div class="section">
+                <div class="section-title">Explanation</div>
+                <div class="explanation">The phrase 'Treated as a defeated country' implies that this treatment was unjust or unexpected. Given Romania's active participation as a major Axis ally for the majority of the war, this framing subtly reinforces a narrative of national victimhood.</div>
+            </div>
+            <div class="section">
+                <div class="section-title">Evidence</div>
+                <div class="quote"><div class="quote-text">"Tratată ca țară învinsă, România a trebuit să cedeze o parte a teritoriilor obținute în 1918"</div></div>
+            </div>
+            <div class="section">
+                <div class="verdict-box">
+                    <div class="verdict-title">📋 Annotation Verdict</div>
+                    <div class="verdict-stats">
+                        <div class="verdict-stat"><div class="verdict-stat-label">Severity</div><div class="verdict-stat-value">3/7</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Confidence</div><div class="verdict-stat-value">0.80</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Category</div><div class="verdict-stat-value" style="font-size:0.95em">National or Cultural Centering</div></div>
+                        <div class="verdict-stat"><div class="verdict-stat-label">Attribution</div><div class="verdict-stat-value" style="font-size:0.9em">Textbook Narrative</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function filterFindings(btn) {
+        const filter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const findings = document.querySelectorAll('.finding');
+        let visible = 0;
+        findings.forEach(f => {
+            if (filter === 'all' || f.getAttribute('data-category') === filter) {
+                f.classList.remove('hidden'); visible++;
+            } else {
+                f.classList.add('hidden');
+                f.classList.remove('expanded');
+            }
+        });
+        document.getElementById('filter-count').textContent = visible + ' of 29 shown';
+    }
+</script>
+</body>
+</html>

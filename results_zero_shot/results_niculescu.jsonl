@@ -1,0 +1,253 @@
+[
+{
+"page_number": "12",
+"controversy": "Framing of the Romanian ethnogenesis and the immigrationist theory (Roesler's theory).",
+"quotes": [
+"Teoria imigraționistă, care îi prezenta pe români ca fiind un popor format la sud de Dunăre, de unde ar fi imigrat la nord de fluviu abia prin secolul al XIII-lea... a fost combătută de membrii Școlii Ardelene",
+"Față de teoria roesleriană au luat poziție, între alții, istoricii B.P. Hasdeu și A.D. Xenopol... conturându-se astfel, pe baze științifice, teoria continuității românilor în spațiul carpato-danubiano-pontic."
+],
+"explanation": "The textbook presents the immigrationist theory (Roesler's theory) primarily as a political tool used against Romanians, which was subsequently 'defeated' by Romanian historians. By explicitly labeling the Romanian continuity theory as being established on 'scientific bases' (pe baze științifice) while implicitly denying such validity to opposing theories, the text demonstrates selection bias and national centering. It frames historiographical debates as a settled national victory rather than an ongoing academic discourse.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Selection Bias",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "18",
+"controversy": "Eurocentric and derogatory description of pre-Columbian American civilizations.",
+"quotes": [
+"În momentul sosirii europenilor, populațiile de pe continentul american se aflau încă în stadiul Preistoriei, ceea ce a facilitat cucerirea lor."
+],
+"explanation": "The textbook claims that at the time of the Europeans' arrival, the populations of the Americas were still in the 'Prehistoric stage'. This is a severe Eurocentric bias and factually incorrect, as civilizations like the Maya, Aztecs, and Incas had highly complex societies, urban centers, and, in the case of the Maya, fully developed writing systems. Labeling them as 'prehistoric' morally loads the text to justify or naturalize their subsequent conquest.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 6,
+"confidence": 0.95
+},
+{
+"page_number": "44",
+"controversy": "Minimization of Romanian state agency in the Holocaust and the deportation of Jews and Roma.",
+"quotes": [
+"Mulți evrei și romi au fost deportați în Transnistria, unde unii dintre ei au murit, din cauza regimului de detenție.",
+"Totuși, Ion Antonescu a refuzat cererea lui Hitler de a aplica și pentru evreii din România „soluția finală”.",
+"În timpul celui de-al Doilea Război Mondial, mulți români și-au manifestat solidaritatea cu evreii, iar unii dintre ei au fost răsplătiți de statul Israel cu titlul Drepți între popoarele lumii."
+],
+"explanation": "The text uses passive voice ('au fost deportați') and euphemistic language ('unii dintre ei au murit, din cauza regimului de detenție') to obscure the direct agency and genocidal intent of the Romanian state under Ion Antonescu. It fails to mention that the Romanian authorities actively orchestrated the massacres and deportations. Furthermore, it immediately pivots to praising Antonescu for refusing the 'Final Solution' for Jews in the Old Kingdom and highlights Romanians who saved Jews, creating an asymmetrical narrative that minimizes Romania's role as a perpetrator in the Holocaust.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Agency Attribution",
+"severity": 7,
+"confidence": 0.95
+},
+{
+"page_number": "72",
+"controversy": "Teleological framing of the 1918 Great Union.",
+"quotes": [
+"România a participat la Primul Război Mondial cu scopul desăvârșirii unității sale naționale, proces îndeplinit în anul 1918 prin voința românilor din provinciile aflate până atunci sub stăpânire străină."
+],
+"explanation": "The textbook presents the unification of 1918 as the inevitable, teleological culmination of a historical destiny ('desăvârșirii unității sale naționale'). This national-centric narrative ignores the complex, highly contingent geopolitical circumstances of World War I, the collapse of empires, and the diverse perspectives of the ethnic minorities living in those territories, reducing the entire conflict to a vehicle for Romanian national fulfillment.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "90",
+"controversy": "Overstatement of Romanian autonomy and the 'Late Crusade' narrative against the Ottoman Empire.",
+"quotes": [
+"De la sfârșitul secolului al XIV-lea, românii au susținut politica de „cruciadă târzie”.",
+"Țările Române nu au fost cucerite de otomani, și-au păstrat autonomia internă, dar au plătit un tribut anual către sultan.",
+"De aceea, se poate considera că otomanii au avut mai multe avantaje din exploatarea indirectă a spațiului românesc, decât dacă l-ar fi cucerit direct."
+],
+"explanation": "The text heavily leans into the traditional Romanian historiographical myth of the Principalities acting as the 'shield of Europe' (cruciadă târzie) and emphasizes their 'internal autonomy'. While mentioning the tribute, it rationalizes the lack of Ottoman conquest as a pragmatic economic choice by the Ottomans rather than acknowledging the severe degree of political subordination and vassalage, thus providing asymmetrical detail that flatters national pride.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Asymmetrical Detail",
+"severity": 4,
+"confidence": 0.85
+},
+{
+"page_number": "100",
+"controversy": "Omission of Romania's aggressive role and war crimes on the Eastern Front during WWII.",
+"quotes": [
+"Pentru a-și recupera teritoriile pierdute, statul român a intrat în războiul antisovietic la 22 iunie 1941, eliberând provinciile ocupate de U.R.S.S.",
+"Continuarea războiului peste Nistru nu a fost susținută de cea mai mare parte a societății românești."
+],
+"explanation": "The textbook frames Romania's entry into WWII strictly as a war of liberation to recover lost territories. It completely omits the Romanian army's active participation in the invasion of the Soviet Union deep into foreign territory (e.g., Odessa, Stalingrad) and the massive war crimes committed there. By merely stating that crossing the Dniester was 'not supported by the majority of society', it absolves the state of its aggressive actions and ideological alignment with Nazi Germany.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 6,
+"confidence": 0.95
+},
+{
+"page_number": "117",
+"controversy": "Promotion of a myth of historical Romanian religious and ethnic tolerance to deflect from historical antisemitism.",
+"quotes": [
+"În spațiul românesc, toleranța religioasă are tradiție îndelungată. Oamenii aparținând altor etnii și credințe religioase s-au putut stabili aici, organizându-și viața de cult proprie.",
+"În perioada 1940–1944, guvernele care s-au succedat la conducere au adoptat o serie de măsuri antisemite, cu care majoritatea populației românești nu era de acord, în spiritul tradiției tolerante existente de secole pe pământul românesc."
+],
+"explanation": "The text constructs a nationalistic myth of inherent Romanian tolerance. When addressing the severe antisemitic laws and actions of the 1940-1944 period, the authors claim, without evidence, that the 'majority of the Romanian population did not agree' with them, invoking the 'tolerant tradition'. This is a profound distortion that seeks to culturally center the nation as inherently good, deflecting societal responsibility for the widespread antisemitism that existed in Romanian society leading up to and during the Holocaust.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 7,
+"confidence": 0.95
+},
+{
+"page_number": "48",
+"controversy": "Underdevelopment and sanitization of the Romanian fascist movement (The Iron Guard).",
+"quotes": [
+"Întemeiată în 1927, mișcarea legionară, de extremă dreapta s-a numit ulterior Garda de Fier, bucurându-se de popularitate în rândul anumitor categorii ale populației."
+],
+"explanation": "While the textbook explicitly details the racist, antisemitic, and terroristic nature of German Nazism on the exact same page, it describes the domestic Romanian Legionary Movement merely as an 'extreme right' group that 'enjoyed popularity'. It completely omits their virulent antisemitism, death squads, and political assassinations in this defining section, effectively sanitizing domestic fascism compared to foreign fascism.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 6,
+"confidence": 0.95
+},
+{
+"page_number": "54",
+"controversy": "Benevolent framing of Ion Antonescu's military dictatorship.",
+"quotes": [
+"...cel militar al generalului Antonescu, care dorea menținerea ordinii în stat, în condițiile pregătirii războiului antisovietic pentru eliberarea Basarabiei și nordului Bucovinei."
+],
+"explanation": "The textbook attributes purely patriotic and administrative motives ('maintaining order', 'liberating' territories) to Ion Antonescu's regime. This moral loading obfuscates the dictatorial, fascist-aligned, and genocidal realities of his government, presenting him instead as a pragmatic defender of the nation.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 6,
+"confidence": 0.9
+},
+{
+"page_number": "80",
+"controversy": "Externalizing the blame for the communist takeover entirely on the Soviet Union.",
+"quotes": [
+"După 23 august 1944 a început procesul de comunizare a țării, sub presiunile U.R.S.S. și cu concursul trupelor sovietice de ocupație."
+],
+"explanation": "The narrative attributes the communist takeover almost exclusively to external Soviet pressure and military occupation. While factually grounded, this framing strips agency from domestic actors, ignoring local communist factions, opportunists, and the socio-economic conditions in Romania that facilitated the regime change, thus preserving the myth of an innocent nation victimized solely by foreign powers.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Agency Attribution",
+"severity": 5,
+"confidence": 0.85
+},
+{
+"page_number": "94",
+"controversy": "Projecting modern national borders backward onto 18th-century imperial annexations.",
+"quotes": [
+"Încălcarea autonomiei Principatelor de către otomani s-a manifestat și prin cedarea de către aceștia a unor teritorii românești, prin tratatele de pace încheiate în urma războaielor ruso-austro-otomane: Banatul și Oltenia... Bucovina... Basarabia..."
+],
+"explanation": "The textbook refers to the 18th and early 19th-century annexations of regions like Banat, Bucovina, and Bessarabia as the ceding of 'Romanian territories' (teritorii românești). This is an anachronistic, national-centric projection that applies the modern concept of a unified Romanian nation-state to medieval/early modern feudal principalities, ignoring the multi-ethnic realities and the dynastic/imperial nature of geopolitics at the time.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "11",
+"controversy": "Biased selection of primary sources to validate the Romanian continuity theory.",
+"quotes": [
+"Numele cel mai adevărat, autentic, de la primul descălecat al lui Traian, este rumân sau romanus...",
+"Întregul nostru neam românesc se vădește, printr-o tradiție veșnică parcă, a-și trage începutul din cetățeni romani..."
+],
+"explanation": "The textbook presents a series of primary sources (Miron Costin, Dimitrie Cantemir, Petru Maior) that uniformly assert the direct Roman origin of Romanians. These sources are presented as historical proof rather than as early modern nation-building myths. The framing directs students to accept these texts as objective evidence of continuity, ignoring the political and ideological contexts in which these chronicles were written.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "Primary Source Framing",
+"severity": 4,
+"confidence": 0.85
+},
+{
+"page_number": "42",
+"controversy": "Exaggerating Romania's role as a benevolent protector of other Balkan nations.",
+"quotes": [
+"România a reprezentat un sprijin important pentru popoarele din Peninsula Balcanică. Mulți reprezentanți ai bulgarilor sau albanezilor au sosit în România, unde au putut să-și desfășoare activitățile patriotice...",
+"...patrioții albanezi... au considerat că România este a doua lor patrie..."
+],
+"explanation": "The text highlights Romania's support for Bulgarian and Albanian national movements, portraying the Romanian state as a selfless beacon of liberty in the Balkans. This asymmetrical detail ignores Romania's own imperialistic ambitions in the region (e.g., the annexation of Southern Dobruja from Bulgaria in 1913) and centers the Romanian state as morally superior.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Asymmetrical Detail",
+"severity": 4,
+"confidence": 0.8
+},
+{
+"page_number": "84",
+"controversy": "Romanticizing the anti-communist mountain resistance while omitting their ideological backgrounds.",
+"quotes": [
+"Principalele manifestări ale luptei anticomuniste au fost rezistența armată a grupurilor din munți... organizată de grupurile înarmate de partizani alcătuite din foste cadre militare, foști legionari, membri ai partidelor de opoziție, țărani."
+],
+"explanation": "While the text briefly lists 'foști legionari' (former Legionnaires) among the partisans, it lumps them together with peasants and democratic opposition, framing the entire movement as a heroic, unified national struggle for liberty. It omits the fact that many of these groups were driven by extreme-right, fascist ideologies rather than democratic ideals, resulting in a sanitized, heroic national myth.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Selection Bias",
+"severity": 5,
+"confidence": 0.85
+},
+{
+"page_number": "92",
+"controversy": "Teleological projection of modern national unification onto the feudal conquests of Michael the Brave.",
+"quotes": [
+"Mihai Viteazul a inițiat acțiunile pentru unirea Țărilor Române.",
+"Transilvania a fost unită cu Țara Românească după victoria obținută de Mihai... iar Moldova i s-a supus în primăvara anului 1600.",
+"Unirea Țărilor Române nu a durat decât câteva luni..."
+],
+"explanation": "The textbook projects the 19th-century modern concept of the 'national unification' of Romanians backward onto the year 1600. Modern historiography widely views Michael the Brave's campaigns as feudal, dynastic conquests typical of the era, not a conscious project of ethnic nation-building. Framing his military expansion as 'Unirea Țărilor Române' represents a teleological and national-centric bias designed to provide historical precedent for the 1918 Great Union.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 5,
+"confidence": 0.95
+},
+{
+"page_number": "40",
+"controversy": "Asymmetrical portrayal of minority treatment in the Austro-Hungarian Empire versus Interwar Romania.",
+"quotes": [
+"Nevoiți să trăiască sub stăpânire habsburgică, apoi austro-ungară (din 1867), românii din Transilvania, Banat și Bucovina au fost supuși unei ample politici de deznaționalizare."
+],
+"explanation": "On page 40, the text emphasizes the 'denationalization' policies of the Austro-Hungarian Empire against Romanians. However, on page 44, when discussing minorities within Greater Romania, the text claims 'Fiecare minoritate națională... a avut posibilitatea de a-și conserva tradițiile'. This asymmetrical detail completely omits the aggressive Romanianization policies, state-sponsored discrimination, and cultural assimilation efforts directed at Hungarians, Germans, Jews, and Bulgarians by the Romanian state during the interwar period.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Asymmetrical Detail",
+"severity": 6,
+"confidence": 0.95
+},
+{
+"page_number": "86",
+"controversy": "Sanitization of the violent 1990 Mineriads (miners' interventions) in post-communist Romania.",
+"quotes": [
+"Revenirea la regimul democratic nu a fost lipsită de momente tensionate, așa cum au fost conflictul interetnic de la Târgu-Mureș (martie 1990), fenomenul manifestației-maraton din Piața Universității din București (1990), descinderile minerilor în Capitală (1990; 1991; 1999)."
+],
+"explanation": "The violent suppression of anti-communist protesters in University Square by coal miners called in by the state (the Mineriads) is euphemistically reduced to mere 'tense moments' and 'descents of the miners' (descinderile minerilor). This severe underdevelopment and neutral linguistic tone obscures the newly formed government's role in orchestrating violence against its own citizens, effectively sanitizing the abuses of the early post-communist regime.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 6,
+"confidence": 0.9
+},
+{
+"page_number": "68",
+"controversy": "Exclusively negative, romantic-nationalist framing of the Phanariot period.",
+"quotes": [
+"În ambele Principate, regimul politic fanariot a durat până în anul 1821, având aceleași trăsături caracteristice: grecizarea domniei și a altor instituții laice sau ecleziastice (în defavoarea boierimii autohtone)... fiscalitatea excesivă, sporirea obligațiilor față de Imperiul Otoman."
+],
+"explanation": "The textbook relies on outdated, 19th-century nationalist historiography that paints the Phanariot century exclusively as a 'dark age' of exploitation, corruption, and 'Greekization'. It omits modern historiographical consensus which highlights the Phanariots' crucial role in abolishing serfdom (Constantin Mavrocordat), introducing modern legal codes, and integrating the Principalities into the broader Enlightenment cultural sphere.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "116",
+"controversy": "Ignoring severe Church-State conflicts and the Orthodox Church's extreme-right complicity in the Interwar period.",
+"quotes": [
+"Până la instaurarea comunismului, nu existau neînțelegeri în privința relațiilor dintre Biserică și statul român."
+],
+"explanation": "The assertion that there were 'no misunderstandings' between the Church and the Romanian state prior to communism is factually incorrect and represents a significant omission. It ignores the intense political battles over the 1927 Concordat with the Vatican, the friction between the Orthodox and Greek-Catholic churches, and the deeply controversial alignment of many Orthodox clerics with the fascist Iron Guard, presenting instead a sanitized, harmonious myth of Church-State relations.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 6,
+"confidence": 0.95
+},
+{
+"page_number": "66",
+"controversy": "Framing medieval Hungarian feudal-religious policies as modern ethnic exclusion.",
+"quotes": [
+"În 1366, regele maghiar Ludovic I de Anjou a condiționat calitatea de nobil de apartenența la religia catolică, românii ortodocși fiind excluși treptat din viața politică."
+],
+"explanation": "The text frames the 1366 decrees of Louis I of Anjou primarily as a national/ethnic exclusion targeting 'Romanians'. In reality, the decrees were feudal and religious in nature, aimed at consolidating Catholic royal authority against Orthodox elites regardless of ethnicity (including Slavic Orthodox nobles). Projecting modern ethnic conflict onto medieval religious-feudal policies is a clear example of national centering.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 5,
+"confidence": 0.9
+}
+]

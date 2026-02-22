@@ -1,0 +1,240 @@
+[
+{
+"page_number": "9",
+"controversy": "Framing of Romania's military alliance with Nazi Germany and the invasion of the USSR.",
+"quotes": [
+"În momentul declanșării războiului împotriva U.R.S.S., România s-a alăturat Germaniei pentru a redobândi teritoriile din Răsărit.",
+"După eliberarea teritoriilor românești, în iulie 1941, a continuat să lupte alături de Germania și dincolo de Nistru."
+],
+"explanation": "The textbook uses the positively charged term 'eliberarea' (liberation) to describe the military campaign alongside Nazi Germany. This frames the alliance primarily as a justified war of national recovery, minimizing the ideological, aggressive, and genocidal aspects of the Axis war effort at this stage.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "10",
+"controversy": "Representation of Ion Antonescu's responsibility for war crimes.",
+"quotes": [
+"A hotărât intrarea României în război alături de Germania; arestat la 23 august 1944... judecat de regimul comunist (după o perioadă de detenție în URSS); condamnat la moarte și executat pentru crime de război."
+],
+"explanation": "By explicitly emphasizing that Antonescu was 'judged by the communist regime' after 'detention in the USSR', the text risks delegitimizing the war crimes charges against him. It subtly frames his execution as a consequence of communist persecution rather than fully addressing his direct agency and responsibility in the Holocaust and war crimes.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 6,
+"confidence": 0.85
+},
+{
+"page_number": "19",
+"controversy": "Eurocentric framing of global history and colonization.",
+"quotes": [
+"Continentul european a intrat în secolul XX purtând cu glorie coroana unei supremații ce părea de neînlocuit.",
+"Europenii au adus în Noile Lumi nu numai marile invenții... dar și propriile concepții despre administrație și lege, sistemele de valori morale și religioase, concepțiile artistice, curentele de gândire și moda."
+],
+"explanation": "The narrative adopts a strongly Eurocentric tone, describing European global dominance as a 'crown of supremacy' and framing colonization primarily as the export of 'civilization', 'progress', and 'moral values'. This perspective marginalizes the destructive impact of colonialism, exploitation, and violence on indigenous populations.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "National or Cultural Centering",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "25",
+"controversy": "Subjective and emotive description of the 1990 Mineriad.",
+"quotes": [
+"Explozia de barbarie a forțelor de ordine și a unei categorii profesionale (minerii) din centrul unui oraș european a creat un sentiment de indignare generală."
+],
+"explanation": "The phrase 'explozia de barbarie' (explosion of barbarism) is highly emotive and subjective. While it reflects the trauma of the post-communist democratic transition, it departs from objective historical analysis, using moral loading to condemn the miners and state forces.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 4,
+"confidence": 0.95
+},
+{
+"page_number": "34",
+"controversy": "Framing of the deportation of the Roma population to Transnistria.",
+"quotes": [
+"Nimeni nu înțelege scopul și interesul acestor expulzări. După cum știți foarte bine, acești cetățeni români nu au fost până astăzi supuși în Statul nostru la un tratament special.",
+"Și pentru ce această cruzime? Ce vină au nenorociții? Ce folos va rezulta din expulzarea lor?"
+],
+"explanation": "The textbook uses a primary source (a letter from C.I.C. Brătianu to Ion Antonescu) to discuss the deportation of the Roma. While it highlights the cruelty of the act, using a Romanian politician's protest frames the national elite as fundamentally opposed to the deportations, potentially obscuring the systemic, state-sponsored nature of the racial policies implemented by the Romanian government.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "Primary Source Framing",
+"severity": 5,
+"confidence": 0.85
+},
+{
+"page_number": "69",
+"controversy": "Externalization of the origins of communist terror.",
+"quotes": [
+"Din aripa moscovit-cominternistă a PCR, a revenit în țară cu Vasile Luca, în august 1944. În lagărele sovietice, s-au ocupat de instructajul prizonierilor români...",
+"Pauker și Luca vor fi eliminați de Dej în 1952, împreună cu Teohari Georgescu."
+],
+"explanation": "The text emphasizes the 'moscovite-cominternist wing' (Pauker, Luca, Georgescu—figures of Jewish, Hungarian, and other minority backgrounds) when discussing the imposition of communism and political purges. This aligns with a common historiographical tendency in Romania to externalize the blame for the harshest communist abuses onto non-ethnic Romanians or foreign agents, subtly contrasting them with the 'national' communist Gheorghiu-Dej.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Selection Bias",
+"severity": 6,
+"confidence": 0.8
+},
+{
+"page_number": "104",
+"controversy": "Underdevelopment of Romania's specific role and agency in the Holocaust.",
+"quotes": [
+"Acest gen de operațiuni este rezultatul unei întregi planificări, deoarece lagărele morții constituiau un mecanism complicat în care, dintr-o întreagă armată de specialiști, fiecare își juca precis rolul.",
+"Crimele supuse judecății Tribunalului de la Nürnberg"
+],
+"explanation": "The page dedicated to the Holocaust focuses almost entirely on the German/Nazi mechanisms of extermination (Auschwitz, Himmler, SS, Nuremberg). It severely underdevelops or completely omits detailed discussion of the Romanian state's independent role in the Holocaust, specifically the mass killings and deportations in Transnistria and the Iași pogrom, thereby minimizing national agency in these atrocities.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Asymmetrical Detail",
+"severity": 7,
+"confidence": 0.95
+},
+{
+"page_number": "75",
+"controversy": "Minimization of the extreme right's historical hold on state power.",
+"quotes": [
+"Deși nu au ajuns la guvernare, în România s-au manifestat grupările politice de extremă dreapta și stânga reprezentate de Mișcarea Legionară și Partidul Comunist."
+],
+"explanation": "The textbook explicitly claims that the extreme right (the Legionary Movement) did not reach power. While this may refer strictly to the democratic interwar period, it is a severe factual omission because the Legionary Movement did govern Romania from September 1940 to January 1941 (The National Legionary State). Failing to clarify this creates a false impression that the extreme right never held state power, minimizing their historical agency and responsibility for state-sponsored violence.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 6,
+"confidence": 0.95
+},
+{
+"page_number": "115",
+"controversy": "Euphemistic description of state-sponsored antisemitism in the late 1930s.",
+"quotes": [
+"În aceeași perioadă [1938-1940], datorită politicilor antievreiești, populația de religie mozaică a întâmpinat numeroase greutăți în a-și manifesta credința."
+],
+"explanation": "Describing the severe, state-sponsored antisemitic legislation of the late 1930s (such as the Goga-Cuza government's stripping of citizenship from hundreds of thousands of Jews) merely as 'numerous difficulties in manifesting their faith' is a gross understatement. It reduces systemic racial persecution and the prelude to the Holocaust to a mere issue of religious inconvenience.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 6,
+"confidence": 0.9
+},
+{
+"page_number": "86",
+"controversy": "Sanitization of Romania's opportunistic territorial expansion in the Second Balkan War.",
+"quotes": [
+"România nu poate uita că ea însăși și-a câștigat independența printr-o luptă contra Imperiului otoman. Dacă bulgarii, sârbii, grecii, creștini ortodocși ca și noi, vor să lupte pentru ameliorarea stării conaționalilor lor supuși otomani, România va păstra o strictă neutralitate.",
+"Lucrările Păcii de la București. România obține Cadrilaterul de la Bulgaria."
+],
+"explanation": "The textbook uses a 1912 primary source emphasizing Romania's 'strict neutrality' and solidarity with Orthodox Christians, but fails to critically address Romania's subsequent unprovoked invasion of Bulgaria in 1913 to annex the Cadrilater. The juxtaposition of the 'neutrality' quote with the territorial acquisition, without narrative critique, sanitizes an opportunistic land grab.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "Primary Source Framing",
+"severity": 5,
+"confidence": 0.85
+},
+{
+"page_number": "79",
+"controversy": "Exceptionalist and heroic framing of the Romanian anti-communist resistance.",
+"quotes": [
+"Câți români cunosc faptul că rezistența anticomunistă din munți a fost cea mai îndelungată dintre toate țările aflate sub ocupație comunistă? Câte manuale povestesc despre eroii luptei fără speranță a partizanilor din munți?"
+],
+"explanation": "By using a quote from a contemporary politician/writer (Varujan Vosganian) that claims the Romanian resistance was the 'longest of all countries under communist occupation' and focuses on their 'heroism', the textbook engages in national exceptionalism. It romanticizes the armed resistance without providing a balanced historical analysis of its scale, impact, or the broader context of Eastern European resistance movements.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "National or Cultural Centering",
+"severity": 4,
+"confidence": 0.85
+},
+{
+"page_number": "95",
+"controversy": "Asymmetrical and oversimplified comparison of British and French decolonization.",
+"quotes": [
+"Britanicii au adoptat formula Comunității de Națiuni (Commonwealth) prin care metropola a păstrat legături economice și culturale cu fostele posesiuni.",
+"Francezii au fost mai intoleranți față de mișcările de eliberare și s-au implicat în războaiele ruinătoare din Indochina (1946–1954) și Algeria (1954–1962)."
+],
+"explanation": "The narrative presents a stark, oversimplified contrast between British and French decolonization. It portrays the British process as peaceful and cooperative ('preserved economic and cultural ties') while labeling the French as 'intolerant'. This omits the extreme violence, concentration camps, and repression utilized by the British Empire during decolonization (e.g., the Mau Mau uprising in Kenya, the Malayan Emergency), resulting in an asymmetrical historical picture.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Asymmetrical Detail",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "64",
+"controversy": "Uncritical inclusion of a sweeping, polemical generalization about the United States.",
+"quotes": [
+"Doar societatea americană pare atinsă cu totul superficial de asemenea probleme de conștiință. Nici indienii, nici negrii, nici Hiroshima nu afectează buna conștiință a Americii, credința – de tip mesianic – în dreptatea istoriei americane și a modelului american."
+],
+"explanation": "The textbook includes a highly polemical quote from historian Lucian Boia that makes sweeping, negative generalizations about the American conscience regarding Native Americans, slavery, and Hiroshima. By presenting this in the main text without counterbalancing perspectives or critical apparatus to analyze the author's subjective stance, it promotes a specific anti-American bias under the guise of objective historical analysis.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "Selection Bias",
+"severity": 5,
+"confidence": 0.8
+},
+  {
+"page_number": "20",
+"controversy": "Presentation of the 'Tanaka Memorial' as a factual historical document.",
+"quotes": [
+    "Din Memorialul premierului nipon Giichi Tanaka, 25 iulie 1927.",
+    "În viitor, dacă vom dori controlul asupra Chinei, va trebui să zdrobim Statele Unite... Pentru a cuceri China, trebuie cucerite mai întâi Manciuria și Mongolia."
+],
+"explanation": "The textbook presents the 'Tanaka Memorial'—a document outlining a Japanese plan for world domination—as a genuine primary source ('Din Memorialul premierului...'). Historiographical consensus widely regards this document as a forgery or anti-Japanese propaganda (likely Soviet or Chinese) with no Japanese original ever found. Treating it as an unquestioned historical fact spreads misinformation and reflects a lack of critical source analysis.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "Selection Bias",
+"severity": 6,
+"confidence": 0.95
+},
+{
+"page_number": "75",
+"controversy": "Factual error regarding the governance of the extreme right in Romania.",
+"quotes": [
+    "Deși nu au ajuns la guvernare, în România s-au manifestat grupările politice de extremă dreapta și stânga reprezentate de Mișcarea Legionară și Partidul Comunist."
+],
+"explanation": "The text explicitly states that the extreme right (Legionary Movement) 'did not reach governance' ('Deși nu au ajuns la guvernare'). This is historically false; the Legionary Movement governed Romania as part of the 'National Legionary State' from September 1940 to January 1941. This denial minimizes the historical responsibility of the Romanian extreme right for state policies, including the early stages of the Holocaust.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Omission / Underdevelopment",
+"severity": 7,
+"confidence": 0.95
+},
+{
+"page_number": "107",
+"controversy": "Asymmetrical framing of religious fundamentalism.",
+"quotes": [
+    "Din punct de vedere istoric, fundamentalismul este asociat pentru prima dată cu credința creștină... la sfârșitul sec. XIX... În anii '30... fundamentalismul și-a pierdut din influență.",
+    "Un alt exemplu de fundamentalism îl constituie cel islamic... Începând cu anii '80 ai secolului trecut, se manifestă o întoarcere la Islam... un terorism islamic globalizat."
+],
+"explanation": "The narrative frames Christian fundamentalism as a historical phenomenon that 'lost influence' in the 1930s, while presenting Islamic fundamentalism as a growing, modern global threat. This ignores the massive political resurgence of Christian fundamentalism in the US (the 'Religious Right') during the 1970s and 80s, creating a skewed, Orientalist perspective that associates modern religious extremism uniquely with Islam.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Asymmetrical Detail",
+"severity": 5,
+"confidence": 0.9
+},
+{
+"page_number": "70",
+"controversy": "Essentialist blaming of the 'collective mind' for the difficulties of democratic transition.",
+"quotes": [
+    "Aceasta se poate constata... mai ales, la nivelul mentalului colectiv.",
+    "Trecerea către acest gen de practici sociale nu s-a făcut fără efort, dat fiind că regimul comunist a sfârșit prin a distruge etica muncii (lucrul bine făcut)."
+],
+"explanation": "The textbook attributes the economic and social chaos of the 1990s transition (corruption, pyramid schemes) to a damaged 'collective mind' and the destruction of the 'work ethic' by communism. This form of agency attribution shifts blame onto the population's psychology rather than analyzing structural policy failures, shock therapy economics, or the predatory behavior of the post-communist elite.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Agency Attribution",
+"severity": 4,
+"confidence": 0.85
+},
+{
+"page_number": "22",
+"controversy": "Sanitization of US foreign policy regarding Apartheid.",
+"quotes": [
+    "Politica Statelor Unite va urmări să producă reforme în sistemul de guvernământ... (Din Deciziile Congresului S.U.A., 1986)"
+],
+"explanation": "By citing the 1986 Comprehensive Anti-Apartheid Act as 'The Policy of the United States', the text omits the crucial context that President Ronald Reagan vetoed this act and advocated for 'constructive engagement' with the Apartheid regime. Presenting the Congressional override simply as 'US Policy' sanitizes the executive branch's historical reluctance to sanction South Africa.",
+"source_type": "PRIMARY_SOURCE_USAGE",
+"category": "Omission / Underdevelopment",
+"severity": 5,
+"confidence": 0.85
+},
+{
+"page_number": "115",
+"controversy": "Euphemistic description of the persecution of Jews in the late 1930s.",
+"quotes": [
+    "În aceeași perioadă, datorită politicilor antievreiești, populația de religie mozaică a întâmpinat numeroase greutăți în a-și manifesta credința."
+],
+"explanation": "Describing the severe antisemitic laws of the Goga-Cuza government (1937-1938) and the Royal Dictatorship—which stripped citizenship from hundreds of thousands of Jews—as merely 'encountering numerous difficulties in manifesting their faith' is a gross trivialization. It reduces state-sponsored racial exclusion and legal persecution to a minor issue of religious practice.",
+"source_type": "TEXTBOOK_NARRATIVE",
+"category": "Moral Loading & Linguistic Tone",
+"severity": 6,
+"confidence": 0.9
+}
+]
